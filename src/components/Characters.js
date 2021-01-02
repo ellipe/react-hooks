@@ -15,14 +15,12 @@ const Characters = () => {
   return (
     <div className='characters'>
       {characters.map((character) => (
-        <div className='character'>
+        <div key={character.id} className='character'>
           <div className='character__image'>
             <img src={character.image} alt={character.name} />
           </div>
           <div className='character__details'>
-            <h2 className='character__name' key={character.id}>
-              {character.name}
-            </h2>
+            <h2 className='character__name'>{character.name}</h2>
             <div className='character__species'>
               Species: <em>{character.species}</em>
             </div>

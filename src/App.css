@@ -6,6 +6,16 @@
   text-align: center;
 }
 
+.light-theme {
+  background-color: #fafafa;
+  color: #252525
+}
+
+.dark-theme {
+  background-color: #252525;
+  color: #fafafa;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
