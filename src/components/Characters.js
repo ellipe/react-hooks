@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  useMemo,
+  useRef,
+  useCallback,
+} from 'react'
+import Search from './Search'
 
 const initialState = {
   favorites: [],
@@ -25,7 +33,13 @@ const favoritesReducer = (state, action) => {
 }
 
 const Characters = () => {
-  const [characters, setCharacters] = useState([]) // useState and useReducer can coexists. 
+  const [characters, setCharacters] = useState([])
+  const [search, setSearch] = useState('')
+
+  // ref
+  const searchInput = useRef(null)
+
+  // reducers
   const [state, dispatch] = useReducer(favoritesReducer, initialState)
 
   useEffect(() => {
@@ -43,15 +57,46 @@ const Characters = () => {
     dispatch({ type: ACTION, payload: character })
   }
 
+  // const handleSearch = () => {
+  //   setSearch(searchInput.current.value)
+  // }
+
+  // using useCallback, memoization for functions calls... avoids re rendering.
+  const handleSearch = useCallback(
+    () => setSearch(searchInput.current.value),
+    []
+  )
+
+  // Without Memoization... filtered characters changes every time search changes (rerendered)
+  // const filteredCharacters = characters.filter((character) => {
+  //   return character.name.toLowerCase().includes(search.toLowerCase())
+  // })
+
+  // With Memoization.
+  const filteredCharacters = useMemo(
+    () =>
+      characters.filter((character) => {
+        return character.name.toLowerCase().includes(search.toLowerCase())
+      }),
+    [characters, search]
+  )
+
   return (
     <div>
-      <div>
+      <div className='favorites'>
         {state.favorites.map((character) => (
           <li key={character.id}>{character.name}</li>
         ))}
       </div>
+
+      <Search
+        search={search}
+        searchInput={searchInput}
+        handleSearch={handleSearch}
+      />
+
       <div className='characters'>
-        {characters.map((character) => (
+        {filteredCharacters.map((character) => (
           <div key={character.id} className='character'>
             <div className='character__image'>
               <img src={character.image} alt={character.name} />
